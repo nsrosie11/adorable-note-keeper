@@ -5,83 +5,83 @@
 
 @layer base {
   :root {
-    --background: 255 255 255;
-    --foreground: 35 38 45;
+    --background: 350 100% 98%; /* Soft Pink */
+    --foreground: 0 0% 0%; /* Black */
 
-    --card: 255 255 255;
-    --card-foreground: 35 38 45;
+    --card: 350 100% 98%; /* Soft Pink */
+    --card-foreground: 0 0% 0%; /* Black */
 
-    --popover: 255 255 255;
-    --popover-foreground: 35 38 45;
+    --popover: 350 100% 98%; /* Soft Pink */
+    --popover-foreground: 0 0% 0%; /* Black */
 
-    --primary: 255 85 245;
-    --primary-foreground: 255 255 255;
+    --primary: 350 100% 90%; /* Lighter Pink */
+    --primary-foreground: 0 0% 0%; /* Black */
 
-    --secondary: 242 240 251;
-    --secondary-foreground: 35 38 45;
+    --secondary: 350 100% 95%; /* Even Lighter Pink */
+    --secondary-foreground: 0 0% 0%; /* Black */
 
-    --muted: 242 240 251;
-    --muted-foreground: 115 113 124;
+    --muted: 350 100% 95%; /* Even Lighter Pink */
+    --muted-foreground: 0 0% 20%; /* Dark Gray for muted text */
 
-    --accent: 242 240 251;
-    --accent-foreground: 35 38 45;
+    --accent: 350 100% 95%; /* Even Lighter Pink */
+    --accent-foreground: 0 0% 0%; /* Black */
 
-    --destructive: 234 56 76;
-    --destructive-foreground: 255 255 255;
+    --destructive: 0 84.2% 60.2%; /* Keep destructive color */
+    --destructive-foreground: 0 0% 98%; /* Keep destructive foreground color */
 
-    --border: 237 236 246;
-    --input: 237 236 246;
-    --ring: 155 135 245;
+    --border: 350 100% 80%; /* Pink border */
+    --input: 350 100% 80%; /* Pink input */
+    --ring: 350 100% 70%; /* Pink ring */
 
     --radius: 0.5rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 350 100% 98%; /* Soft Pink */
+    --sidebar-foreground: 0 0% 0%; /* Black */
+    --sidebar-primary: 350 100% 90%; /* Lighter Pink */
+    --sidebar-primary-foreground: 0 0% 0%; /* Black */
+    --sidebar-accent: 350 100% 95%; /* Even Lighter Pink */
+    --sidebar-accent-foreground: 0 0% 0%; /* Black */
+    --sidebar-border: 350 100% 80%; /* Pink border */
+    --sidebar-ring: 350 100% 70%; /* Pink ring */
   }
 
   .dark {
-    --background: 35 38 45;
-    --foreground: 242 240 251;
+    --background: 350 30% 25%; /* Dark Pink */
+    --foreground: 0 0% 98%; /* White */
 
-    --card: 45 48 55;
-    --card-foreground: 242 240 251;
+    --card: 350 30% 30%; /* Darker Pink */
+    --card-foreground: 0 0% 98%; /* White */
 
-    --popover: 45 48 55;
-    --popover-foreground: 242 240 251;
+    --popover: 350 30% 30%; /* Darker Pink */
+    --popover-foreground: 0 0% 98%; /* White */
 
-    --primary: 155 135 245;
-    --primary-foreground: 255 255 255;
+    --primary: 350 70% 70%; /* Bright Pink */
+    --primary-foreground: 0 0% 0%; /* Black for visibility on bright pink */
 
-    --secondary: 55 58 65;
-    --secondary-foreground: 242 240 251;
+    --secondary: 350 30% 20%; /* Dark Pink */
+    --secondary-foreground: 0 0% 98%; /* White */
 
-    --muted: 55 58 65;
-    --muted-foreground: 141 139 150;
+    --muted: 350 30% 20%; /* Dark Pink */
+    --muted-foreground: 0 0% 80%; /* Light Gray */
 
-    --accent: 55 58 65;
-    --accent-foreground: 242 240 251;
+    --accent: 350 30% 20%; /* Dark Pink */
+    --accent-foreground: 0 0% 98%; /* White */
 
-    --destructive: 234 56 76;
-    --destructive-foreground: 242 240 251;
+    --destructive: 0 62.8% 60.6%; /* Keep destructive color */
+    --destructive-foreground: 0 0% 98%; /* Keep destructive foreground */
 
-    --border: 55 58 65;
-    --input: 55 58 65;
-    --ring: 155 135 245;
+    --border: 350 30% 40%; /* Dark Pink Border */
+    --input: 350 30% 40%; /* Dark Pink Input */
+    --ring: 350 70% 70%; /* Bright Pink Ring */
     
-    --sidebar-background: 35 38 45;
-    --sidebar-foreground: 242 240 251;
-    --sidebar-primary: 155 135 245;
-    --sidebar-primary-foreground: 255 255 255;
-    --sidebar-accent: 55 58 65;
-    --sidebar-accent-foreground: 242 240 251;
-    --sidebar-border: 55 58 65;
-    --sidebar-ring: 155 135 245;
+    --sidebar-background: 350 30% 25%; /* Dark Pink */
+    --sidebar-foreground: 0 0% 98%; /* White */
+    --sidebar-primary: 350 70% 70%; /* Bright Pink */
+    --sidebar-primary-foreground: 0 0% 0%; /* Black for visibility on bright pink */
+    --sidebar-accent: 350 30% 20%; /* Dark Pink */
+    --sidebar-accent-foreground: 0 0% 98%; /* White */
+    --sidebar-border: 350 30% 40%; /* Dark Pink Border */
+    --sidebar-ring: 350 70% 70%; /* Bright Pink Ring */
   }
 }
 

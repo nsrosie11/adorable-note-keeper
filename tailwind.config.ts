@@ -64,13 +64,13 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				note: {
-					purple: '#9b87f5',
-					lightPurple: '#E5DEFF',
+					purple: '#FF9CC7', /* Changed to pink */
+					lightPurple: '#FFDEE2', /* Soft Pink */
 					yellow: '#FEF7CD',
 					blue: '#D3E4FD',
 					green: '#F2FCE2',
 					orange: '#FEC6A1',
-					pink: '#FFDEE2',
+					pink: '#FFDEE2', /* Soft Pink */
 				}
 			},
 			borderRadius: {
