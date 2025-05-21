@@ -1,6 +1,7 @@
 
 import React from 'react';
 import Navbar from './Navbar';
+import { useAuth } from '@/contexts/AuthContext';
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -8,9 +9,12 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children, username }) => {
+  const { user } = useAuth();
+  const displayName = username || user?.email?.split('@')[0] || 'User';
+  
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar username={username} />
+      <Navbar username={displayName} />
       <main className="flex-1 container py-6 px-4">
         {children}
       </main>

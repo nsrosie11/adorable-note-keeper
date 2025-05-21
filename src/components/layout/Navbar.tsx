@@ -2,15 +2,24 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { LogOut, FileText } from "lucide-react";
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 type NavbarProps = {
   username?: string;
 };
 
 const Navbar: React.FC<NavbarProps> = ({ username = "User" }) => {
-  const handleLogout = () => {
-    // Placeholder function - will need Supabase integration
-    window.location.href = '/';
+  const { signOut, user } = useAuth();
+  
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      toast.success('Logged out successfully');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error('Failed to log out');
+    }
   };
 
   return (
@@ -21,10 +30,10 @@ const Navbar: React.FC<NavbarProps> = ({ username = "User" }) => {
           <h1 className="text-xl font-bold">Notes App</h1>
         </div>
         
-        {username && (
+        {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium hidden md:inline-block">
-              Hi, {username}
+              Hi, {user.email?.split('@')[0] || username}
             </span>
             <Button 
               variant="outline" 

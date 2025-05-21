@@ -8,53 +8,57 @@ import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { v4 as uuidv4 } from 'uuid';
-
-// Sample user for demo purposes - would come from auth context
-const mockUser = {
-  id: '1',
-  email: 'user@example.com',
-  name: 'Demo User'
-};
-
-// Sample notes - would come from Supabase
-const mockNotes: Note[] = [
-  {
-    id: '1',
-    title: 'Welcome to Notes App',
-    content: 'This is a simple note-taking application. You can create, edit, and delete notes. Try it out!',
-    created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-    updated_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '2',
-    title: 'Shopping List',
-    content: '- Milk\n- Eggs\n- Bread\n- Fruits\n- Vegetables',
-    created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    updated_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '3',
-    title: 'Project Ideas',
-    content: '1. Build a personal website\n2. Create a recipe app\n3. Develop a habit tracker',
-    created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-  },
-];
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
-  const [notes, setNotes] = useState<Note[]>(mockNotes);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingNote, setEditingNote] = useState<Note | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { user, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // If auth is not loading and user is not authenticated, redirect to auth page
+    if (!authLoading && !user) {
+      navigate('/auth');
+      return;
+    }
+
     // Simulate loading notes from Supabase
     const timer = setTimeout(() => {
       setIsLoading(false);
+      // Mock notes data - in a real app we'd fetch this from Supabase
+      if (user) {
+        setNotes([
+          {
+            id: '1',
+            title: 'Welcome to Notes App',
+            content: 'This is a simple note-taking application. You can create, edit, and delete notes. Try it out!',
+            created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
+            updated_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+          {
+            id: '2',
+            title: 'Shopping List',
+            content: '- Milk\n- Eggs\n- Bread\n- Fruits\n- Vegetables',
+            created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
+            updated_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+          {
+            id: '3',
+            title: 'Project Ideas',
+            content: '1. Build a personal website\n2. Create a recipe app\n3. Develop a habit tracker',
+            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
+            updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+          },
+        ]);
+      }
     }, 500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [user, authLoading, navigate]);
 
   const handleCreateNote = () => {
     setEditingNote(null);
@@ -98,8 +102,16 @@ const Dashboard = () => {
     setIsDialogOpen(false);
   };
 
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p>Loading authentication...</p>
+      </div>
+    );
+  }
+
   return (
-    <Layout username={mockUser.name}>
+    <Layout username={user?.email?.split('@')[0] || 'User'}>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-2xl font-bold">My Notes</h1>
         <Button onClick={handleCreateNote} className="flex items-center gap-1">

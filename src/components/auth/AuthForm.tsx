@@ -4,6 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { useAuth } from '@/contexts/AuthContext';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle } from 'lucide-react';
 
 type AuthProps = {
   isLogin: boolean;
@@ -14,14 +17,39 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { signIn, signUp } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError(null);
 
-    // This is a placeholder - we'll need to integrate Supabase
-    toast.info("Please connect Supabase integration to enable authentication");
-    setLoading(false);
+    try {
+      if (isLogin) {
+        const { error, success } = await signIn(email, password);
+        if (error) {
+          setError(error.message || 'Failed to sign in. Please check your credentials.');
+          toast.error('Login failed. Please check your credentials.');
+        } else if (success) {
+          toast.success('Login successful!');
+        }
+      } else {
+        const { error, success } = await signUp(email, password);
+        if (error) {
+          setError(error.message || 'Failed to sign up. Please try again.');
+          toast.error('Sign up failed. Please try again.');
+        } else if (success) {
+          toast.success('Account created! Please check your email for verification.');
+        }
+      }
+    } catch (err) {
+      console.error('Auth error:', err);
+      setError('An unexpected error occurred. Please try again.');
+      toast.error('An unexpected error occurred');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -37,6 +65,12 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {error && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="email" className="text-sm font-medium">
