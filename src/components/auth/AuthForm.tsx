@@ -40,7 +40,8 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
           setError(error.message || 'Failed to sign up. Please try again.');
           toast.error('Sign up failed. Please try again.');
         } else if (success) {
-          toast.success('Account created! Please check your email for verification.');
+          toast.success('Account created successfully! Redirecting to dashboard...');
+          // No need to tell users to check email for verification anymore
         }
       }
     } catch (err) {

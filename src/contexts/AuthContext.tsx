@@ -84,7 +84,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const handleSignUp = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signUp({
+      // Sign up the user - with auto-confirm enabled in Supabase,
+      // this will automatically log the user in after signup
+      const { error, data } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -94,6 +96,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { error, success: false };
       }
       
+      // With auto-confirm enabled, a session should be created immediately
+      if (data?.user && !data.user.confirmed_at && !data.session) {
+        // If for some reason auto-confirm isn't working, we'll show a message
+        return { 
+          error: { message: 'Account created but may require email verification.' },
+          success: true 
+        };
+      }
+      
+      // User is automatically signed in after signup
       return { error: null, success: true };
     } catch (error) {
       console.error('Unexpected error during sign up:', error);
