@@ -7,9 +7,9 @@ import { Note } from '@/components/notes/NoteCard';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
-import { v4 as uuidv4 } from 'uuid';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/lib/supabase';
 
 const Dashboard = () => {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -26,38 +26,34 @@ const Dashboard = () => {
       return;
     }
 
-    // Simulate loading notes from Supabase
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // Mock notes data - in a real app we'd fetch this from Supabase
-      if (user) {
-        setNotes([
-          {
-            id: '1',
-            title: 'Welcome to Notes App',
-            content: 'This is a simple note-taking application. You can create, edit, and delete notes. Try it out!',
-            created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-            updated_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-          },
-          {
-            id: '2',
-            title: 'Shopping List',
-            content: '- Milk\n- Eggs\n- Bread\n- Fruits\n- Vegetables',
-            created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-            updated_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-          },
-          {
-            id: '3',
-            title: 'Project Ideas',
-            content: '1. Build a personal website\n2. Create a recipe app\n3. Develop a habit tracker',
-            created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-            updated_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-          },
-        ]);
-      }
-    }, 500);
+    const fetchNotes = async () => {
+      if (!user) return;
+      
+      try {
+        setIsLoading(true);
+        const { data, error } = await supabase
+          .from('notes')
+          .select('*')
+          .order('updated_at', { ascending: false });
 
-    return () => clearTimeout(timer);
+        if (error) {
+          console.error('Error fetching notes:', error);
+          toast.error('Failed to load notes');
+          return;
+        }
+
+        setNotes(data || []);
+      } catch (error) {
+        console.error('Error in fetchNotes:', error);
+        toast.error('Failed to load notes');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchNotes();
+    }
   }, [user, authLoading, navigate]);
 
   const handleCreateNote = () => {
@@ -70,36 +66,84 @@ const Dashboard = () => {
     setIsDialogOpen(true);
   };
 
-  const handleDeleteNote = (id: string) => {
-    // In a real app, this would make a request to Supabase
-    setNotes(notes.filter(note => note.id !== id));
-    toast.success('Note deleted successfully');
+  const handleDeleteNote = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('notes')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error deleting note:', error);
+        toast.error('Failed to delete note');
+        return;
+      }
+
+      setNotes(notes.filter(note => note.id !== id));
+      toast.success('Note deleted successfully');
+    } catch (error) {
+      console.error('Error in handleDeleteNote:', error);
+      toast.error('Failed to delete note');
+    }
   };
 
-  const handleSaveNote = (noteData: Omit<Note, 'id' | 'created_at' | 'updated_at'>) => {
-    const now = new Date().toISOString();
+  const handleSaveNote = async (noteData: Omit<Note, 'id' | 'created_at' | 'updated_at'>) => {
+    try {
+      const now = new Date().toISOString();
 
-    if (editingNote) {
-      // Update existing note
-      setNotes(notes.map(note => 
-        note.id === editingNote.id 
-          ? { ...note, ...noteData, updated_at: now } 
-          : note
-      ));
-      toast.success('Note updated successfully');
-    } else {
-      // Create new note
-      const newNote: Note = {
-        id: uuidv4(),
-        ...noteData,
-        created_at: now,
-        updated_at: now,
-      };
-      setNotes([newNote, ...notes]);
-      toast.success('Note created successfully');
+      if (editingNote) {
+        // Update existing note
+        const { error } = await supabase
+          .from('notes')
+          .update({
+            title: noteData.title,
+            content: noteData.content,
+            updated_at: now
+          })
+          .eq('id', editingNote.id);
+
+        if (error) {
+          console.error('Error updating note:', error);
+          toast.error('Failed to update note');
+          return;
+        }
+
+        // Update the local state
+        setNotes(notes.map(note =>
+          note.id === editingNote.id
+            ? { ...note, ...noteData, updated_at: now }
+            : note
+        ));
+        toast.success('Note updated successfully');
+      } else {
+        // Create new note
+        const { data, error } = await supabase
+          .from('notes')
+          .insert({
+            title: noteData.title,
+            content: noteData.content,
+            user_id: user?.id
+          })
+          .select();
+
+        if (error) {
+          console.error('Error creating note:', error);
+          toast.error('Failed to create note');
+          return;
+        }
+
+        if (data && data.length > 0) {
+          // Add the new note to the beginning of the list
+          setNotes([data[0], ...notes]);
+          toast.success('Note created successfully');
+        }
+      }
+
+      setIsDialogOpen(false);
+    } catch (error) {
+      console.error('Error in handleSaveNote:', error);
+      toast.error('Failed to save note');
     }
-
-    setIsDialogOpen(false);
   };
 
   if (authLoading) {
