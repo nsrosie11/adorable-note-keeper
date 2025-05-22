@@ -23,17 +23,17 @@ const Navbar: React.FC<NavbarProps> = ({ username = "User" }) => {
   };
 
   return (
-    <header className="border-b bg-background sticky top-0 z-10">
+    <header className="border-b bg-muted/50 sticky top-0 z-10">
       <div className="container flex items-center justify-between h-16 max-w-7xl mx-auto px-4">
         <div className="flex items-center">
           <FileText size={24} className="mr-2 text-note-purple" />
-          <h1 className="text-xl font-bold">Notes App</h1>
+          <h1 className="text-xl font-bold">Notely</h1>
         </div>
         
         {user && (
           <div className="flex items-center gap-4">
             <span className="text-sm font-medium hidden md:inline-block">
-              Hi, {user.email?.split('@')[0] || username}
+              Holaa, {user.email?.split('@')[0] || username}
             </span>
             <Button 
               variant="outline" 

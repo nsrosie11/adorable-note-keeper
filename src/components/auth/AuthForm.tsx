@@ -61,7 +61,7 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
         </CardTitle>
         <CardDescription className="text-center">
           {isLogin
-            ? 'Enter your credentials to access your notes'
+            ? 'Welcome back to notely'
             : 'Create an account to start taking notes'}
         </CardDescription>
       </CardHeader>
@@ -93,6 +93,7 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
             <Input
               id="password"
               type="password"
+              placeholder="minimum 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -104,9 +105,9 @@ const AuthForm: React.FC<AuthProps> = ({ isLogin, onToggleForm }) => {
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button variant="link" onClick={onToggleForm}>
-          {isLogin ? "Don't have an account? Sign up" : "Already have an account? Login"}
-        </Button>
+      <Button variant="link" className="text-foreground" onClick={onToggleForm}>
+  {isLogin ? "Don't have an account? Sign up" : "You have an account? Login"}
+</Button>
       </CardFooter>
     </Card>
   );
